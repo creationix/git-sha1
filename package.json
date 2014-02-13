@@ -2,7 +2,7 @@
   "name": "git-sha1",
   "version": "0.1.0",
   "description": "A pure JS SHA1 implementation created for js-git.",
-  "main": "git-sha1.js",
+  "main": "sha1.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
