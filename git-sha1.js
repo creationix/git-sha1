@@ -1,5 +1,15 @@
 "use strict";
 
+var create, crypto;
+if (typeof process === 'object' && typeof process.versions === 'object' && process.versions.node) {
+  var nodeRequire = require; // Prevent mine.js from seeing this require
+  crypto = nodeRequire('crypto');
+  create = createNode;
+}
+else {
+  create = createJs;
+}
+
 // Input chunks must be either arrays of bytes or "raw" encoded strings
 module.exports = function sha1(buffer) {
   if (buffer === undefined) return create();
@@ -8,8 +18,21 @@ module.exports = function sha1(buffer) {
   return shasum.digest();
 };
 
-// A streaming interface for when nothing is passed in.
-function create() {
+// Use node's openssl bindings when available
+function createNode() {
+  var shasum = crypto.createHash('sha1');
+  return {
+    update: function (buffer) {
+      return shasum.update(buffer);
+    },
+    digest: function () {
+      return shasum.digest('hex');
+    }
+  };
+}
+
+// A pure JS implementation of sha1 for non-node environments.
+function createJs() {
   var h0 = 0x67452301;
   var h1 = 0xEFCDAB89;
   var h2 = 0x98BADCFE;
