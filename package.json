@@ -1,6 +1,6 @@
 {
   "name": "git-sha1",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "A pure JS SHA1 implementation created for js-git.",
   "main": "git-sha1.js",
   "scripts": {
