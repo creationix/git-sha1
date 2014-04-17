@@ -1,5 +1,6 @@
 "use strict";
 
+var shared = new Uint32Array(80);
 var create, crypto;
 if (typeof process === 'object' && typeof process.versions === 'object' && process.versions.node) {
   var nodeRequire = require; // Prevent mine.js from seeing this require
@@ -12,8 +13,8 @@ else {
 
 // Input chunks must be either arrays of bytes or "raw" encoded strings
 module.exports = function sha1(buffer) {
-  if (buffer === undefined) return create();
-  var shasum = create();
+  if (buffer === undefined) return create(false);
+  var shasum = create(true);
   shasum.update(buffer);
   return shasum.digest();
 };
@@ -32,15 +33,17 @@ function createNode() {
 }
 
 // A pure JS implementation of sha1 for non-node environments.
-function createJs() {
+function createJs(sync) {
   var h0 = 0x67452301;
   var h1 = 0xEFCDAB89;
   var h2 = 0x98BADCFE;
   var h3 = 0x10325476;
   var h4 = 0xC3D2E1F0;
   // The first 64 bytes (16 words) is the data chunk
-  var block = new Uint32Array(80), offset = 0, shift = 24;
+  var block, offset = 0, shift = 24;
   var totalLength = 0;
+  if (sync) block = shared;
+  else block = new Uint32Array(80);
 
   return { update: update, digest: digest };
 
