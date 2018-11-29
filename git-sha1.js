@@ -10,17 +10,20 @@ if (isNode) {
     create = createNode;
 }
 else {
+    crypto = require('crypto-browserify');
     shared = new Uint32Array(80);
     create = createJs;
 }
 // Input chunks must be either arrays of bytes or "raw" encoded strings
-module.exports = function sha1(buffer) {
+function sha1(buffer) {
     if (buffer === undefined)
         return create(false);
     var shasum = create(true);
     shasum.update(buffer);
     return shasum.digest();
-};
+}
+exports.sha1 = sha1;
+exports.default = sha1;
 // Use node's openssl bindings when available
 function createNode(sync) {
     var shasum = crypto.createHash('sha1');

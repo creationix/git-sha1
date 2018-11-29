@@ -10,17 +10,20 @@ if (isNode) {
     crypto = require('crypto');
     create = createNode;
 } else {
+    crypto = require('crypto-browserify');
     shared = new Uint32Array(80);
     create = createJs;
 }
 
 // Input chunks must be either arrays of bytes or "raw" encoded strings
-module.exports = function sha1(buffer: undefined | string) {
+export function sha1(buffer: undefined | string) {
     if (buffer === undefined) return create(false);
     const shasum = create(true);
     shasum.update(buffer);
     return shasum.digest();
-};
+}
+
+export default sha1;
 
 interface ICreate {
     update: (s: string) => void;
